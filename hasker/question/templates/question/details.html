@@ -1,0 +1,13 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <div class="post">
+        {% if question.created_date %}
+            <div class="date">
+                {{ question.created_date }}
+            </div>
+        {% endif %}
+        <h1>{{ question.subject }}</h1>
+        <p>{{ question.description|linebreaksbr }}</p>
+    </div>
+{% endblock %}

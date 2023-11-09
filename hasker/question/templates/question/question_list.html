@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <nav class="nav">
+        <div class="container">
+            <ul class="nav justify-content-center">
+                <li {% if view.ordering == '-posted' %} {% endif %}><a class="nav-link" href="{% url 'question:index' %}">Latest</a></li>
+                <b class="nav-link">|</b>
+                <li {% if view.ordering == '-rating' %} {% endif %}><a class="nav-link" href="{% url 'question:index' %}">Top</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    {% for question in questions %}
+        <div class="post">
+            <h1><a href="{% url 'question:ask' %}">{{ question.subject }}</a></h1>
+            <p>{{ question.description|linebreaksbr }}</p>
+            <p>Asked {{ question.created_date }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}

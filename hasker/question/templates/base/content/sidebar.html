@@ -1,0 +1,12 @@
+<div class="d-flex flex-column align-items-stretch flex-shrink-0 ">
+    <h3 align="center">Trends</h3>
+    <hr>
+    {% for question in trending %}
+    <div class="list-group list-group-flush border-bottom scrollarea">
+        <div>
+            <a class="d-flex w-100 align-items-center justify-content-between" href="{% url 'question_detail' question_id=question.pk %}">{{ question.title }}</a>
+        </div>
+        <span class="mb-1">{{ question.number_of_votes }} votes</span>
+    </div>
+    {% endfor %}
+</div>
