@@ -1,3 +1,5 @@
+
+from typing import List, Optional
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -13,7 +15,8 @@ class Question(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     description = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)
-    tags = models.CharField(max_length=255)
+    tags = models.ManyToManyField("Tag")
+    votes = models.IntegerField(default=None,blank=True)
 
     def publish(self):
         self.created_date = timezone.now()
@@ -21,9 +24,41 @@ class Question(models.Model):
     def __str__(self):
         return self.subject
 
+    def add_tags(self, tags: List[str], user) -> None:
+        if self.pk is None:
+            raise ValueError("Instance should be saved.")
+        for raw_tag in tags:
+            try:
+                tag = Tag.objects.get(name=raw_tag)
+            except ObjectDoesNotExist:
+                tag = Tag.objects.create(added=user, name=raw_tag)
+            self.tags.add(tag)
+
+
+    @classmethod
+    def trending(cls, count: int = 5) -> models.QuerySet:
+        return cls.objects.order_by("-votes")[:count]
+
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.PROTECT)
     text = models.TextField()
     is_correct = models.BooleanField()
     created_date = models.DateTimeField(auto_now_add=True)
+
+class Tag(models.Model):
+    added = models.DateTimeField(auto_now_add=True)
+    added_by = models.ForeignKey(
+        User,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="added_tags",
+        related_query_name="added_tag",
+    )
+    name = models.CharField(
+        blank=False, max_length=settings.QUESTIONS_TAGS_LENGTH
+    )
+
+    def __str__(self):
+        return self.name

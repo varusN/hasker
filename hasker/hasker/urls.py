@@ -18,9 +18,15 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 
+#from user.views import LogIn, LogOut, Settings, SignUp
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("question.urls")),
+    # path("login", LogIn.as_view(), name="login"),
+    # path("logout", LogOut.as_view(), name="logout"),
+    # path("settings", Settings.as_view(), name="settings"),
+    # path("signup", SignUp.as_view(), name="signup"),
 ]
 
 if settings.DEBUG:

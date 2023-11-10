@@ -10,8 +10,8 @@
           <li class="nav-item"><a href="{% url 'question:ask' %}" class="btn btn-primary" aria-current="page">Ask question</a></li>
         </ul>
 
-        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-          <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search"  action="{% url 'question:search' %}">
+          <input type="search" class="form-control" name="q" placeholder="Search..." aria-label="Search" value="{{ query }}">
         </form>
 
         {% if request.user.is_authenticated %}

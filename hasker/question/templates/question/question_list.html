@@ -3,9 +3,9 @@
     <nav class="nav">
         <div class="container">
             <ul class="nav justify-content-center">
-                <li {% if view.ordering == '-posted' %} {% endif %}><a class="nav-link" href="{% url 'question:index' %}">Latest</a></li>
+                <li {% if view.ordering == '-posted' %} {% endif %}><a class="nav-link" href="{% url 'question:latest' %}">Latest</a></li>
                 <b class="nav-link">|</b>
-                <li {% if view.ordering == '-rating' %} {% endif %}><a class="nav-link" href="{% url 'question:index' %}">Top</a></li>
+                <li {% if view.ordering == '-rating' %} {% endif %}><a class="nav-link" href="{% url 'question:top' %}">Top</a></li>
             </ul>
         </div>
     </nav>
