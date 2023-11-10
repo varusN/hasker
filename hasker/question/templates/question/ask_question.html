@@ -1,9 +1,42 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-    <h1>New question</h1>
-    <form method="POST" class="post-form">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
+<div class="mb-3">
+
+    <h1>What do you want to get answer for?</h1>
+
+    <form method="POST" action="" class="mb-3">
+        <div class="form-label">
+            <input
+                class="form-control"
+                type="text" name="subject"
+                placeholder="Subject"
+                required
+                {% if form.subgect.value != None %}value="{{ form.subgect.value|stringformat:'s' }}"{% endif %}
+            >
+        </div>
+
+        <div class="input-group mb-3">
+            <textarea class="form-control" rows="8" name="description" placeholder="Write your questions here...">{% if form.description.value != None %}{{ form.description.value|stringformat:'s' }}{% endif %}</textarea>
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="form-label">
+                <input
+                    class="form-control {% if form.tags.errors %} form-text {% endif %}"
+                    type="text"
+                    name="tags"
+                    placeholder="Tags (comma separated)"
+                    {% if form.tags.value != None %}value="{{ form.tags.value|stringformat:'s' }}"{% endif %}
+                >
+            </div>
+        </div>
+            {% if form.tags.errors %}
+                <div class="alert alert-danger" role="alert" {{ form.tags.errors }}</div>
+            {% endif %}
+            <button class="btn btn-primary">Push</button>
+        {% csrf_token %}
     </form>
+
+</div>
 {% endblock %}

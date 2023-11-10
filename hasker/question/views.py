@@ -1,10 +1,14 @@
+import time
 from django.http import HttpResponse, HttpRequest
 from django.utils import timezone
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView,ListView, CreateView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
-from django.db.models import Q
-
+from django.db.models import Q, F
+from django.urls import reverse_lazy
+from django.db import transaction
 
 from .models import Question
 from .models import Answer
@@ -30,6 +34,7 @@ class Questions(Trends, ListView):
         .order_by("?")
         .all()
     )
+
 class LatestQuestions(Questions):
     ordering = ("-created_date")
 
@@ -51,7 +56,7 @@ class SearchQuestions(Questions):
             *_, tag = self.query.partition(":")
             tag = tag.strip().lower()
             if tag:
-                return redirect("tag", tag=tag)
+                return redirect("question:tag", tag=tag)
         return super().get(*args, **kwargs)
 
     def get_queryset(self):
@@ -71,14 +76,54 @@ class TagQuestions(Questions):
     def get_queryset(self):
         qs = super().get_queryset()
         tag = self.kwargs["tag"].strip().lower()
-        qs = qs.filter(tags__name=tag)
+        qs = qs.filter(tag__name=tag)
         return qs
 
 
-def answers(request, pk):
-    question = get_object_or_404(Question, pk=pk)
+def details(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
     return render(request, 'question/details.html', {'question': question})
 
-def ask_question(request):
-    form = QuestionForm()
-    return render(request, 'question/ask_question.html', {'form': form})
+class Details(Trends, View):
+    template_name = "question/question_list.html"
+
+    def get(self, request, question_id):
+        question = get_object_or_404(Question, pk=self.pk)
+        return render(request,
+                      self.template_name,
+                      {'question': question},
+                      )
+def post():
+    print('AAAAAAAAAA')
+def vote_up(self):
+    print('UP')
+    reporter = Question.objects.get(pk=self.pk)
+    reporter.stories_filed = F('votes') + 1
+    reporter.save()
+
+def vote_down(self):
+    reporter = Question.objects.get(pk=self.pk)
+    reporter.stories_filed = F('votes') - 1
+    reporter.save()
+
+
+class AskQuestion(Trends, LoginRequiredMixin, CreateView):
+
+    form_class = QuestionForm
+    model = Question
+    template_name = "question/ask_question.html"
+    success_url = reverse_lazy("question:latest")
+
+    @transaction.atomic
+    def form_valid(self, form):
+        question = form.save(commit=False)
+        question.author = self.request.user
+        question.save()
+
+        raw_tags = form.cleaned_data["tags"]
+        question.add_tags(raw_tags, self.request.user)
+
+        messages.success(
+            self.request, "Your question posted!"
+        )
+        return redirect(self.success_url)

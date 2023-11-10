@@ -4,25 +4,26 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from user.models import User
-
-
-VOTE_UP = 1
-VOTE_DOWN = -1
-VOTES = ((VOTE_UP, "Top Up"), (VOTE_DOWN, "Top Down"))
+from django.core.exceptions import ObjectDoesNotExist
 
 class Question(models.Model):
     subject = models.CharField(max_length=255)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     description = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)
-    tags = models.ManyToManyField("Tag")
-    votes = models.IntegerField(default=None,blank=True)
+    tag = models.ManyToManyField("Tag")
+    votes = models.IntegerField(default=0,blank=True)
+    answers = models.IntegerField(default=None,blank=True)
 
     def publish(self):
         self.created_date = timezone.now()
         self.save()
     def __str__(self):
         return self.subject
+
+    @classmethod
+    def trending(cls, count: int = 5) -> models.QuerySet:
+        return cls.objects.order_by("-votes")[:count]
 
     def add_tags(self, tags: List[str], user) -> None:
         if self.pk is None:
@@ -32,12 +33,7 @@ class Question(models.Model):
                 tag = Tag.objects.get(name=raw_tag)
             except ObjectDoesNotExist:
                 tag = Tag.objects.create(added=user, name=raw_tag)
-            self.tags.add(tag)
-
-
-    @classmethod
-    def trending(cls, count: int = 5) -> models.QuerySet:
-        return cls.objects.order_by("-votes")[:count]
+            self.tag.add(tag)
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)

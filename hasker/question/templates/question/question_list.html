@@ -11,10 +11,23 @@
     </nav>
 
     {% for question in questions %}
-        <div class="post">
-            <h1><a href="{% url 'question:ask' %}">{{ question.subject }}</a></h1>
-            <p>{{ question.description|linebreaksbr }}</p>
+        <div >
+            <h1><a href="{% url 'question:details' question_id=question.pk %}">{{ question.subject }}</a></h1>
+            <p >{{ question.description|truncatechars:300 }}</p>
             <p>Asked {{ question.created_date }}</p>
+        </div>
+        <div>
+            <div>
+                <div class="mb-1">
+                    {% for tag in question.tag.all %}
+                    <a class="btn btn-success btn-sm" href="{% url 'question:tag' tag=tag.name %}">{{ tag.name }}</a>
+                {% endfor %}
+                </div>
+            </div>
+            <div class="mb-1">
+                <a class="btn btn-outline-primary btn-sm" href="{% url 'question:details' question_id=question.pk %}">{{ question.answers }} answers</a>
+                <a class="btn btn-outline-danger btn-sm" href="{% url 'question:details' question_id=question.pk %}">{{ question.votes }} votes</a>
+            </div>
         </div>
     {% endfor %}
 {% endblock %}
