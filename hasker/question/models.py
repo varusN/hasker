@@ -11,14 +11,21 @@ class Question(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     description = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)
-    tag = models.ManyToManyField("Tag")
+    tag = models.ManyToManyField("Tag", related_name="tags" )
     votes = models.IntegerField(default=0,blank=True)
-    answers = models.IntegerField(default=None,blank=True)
+    answers = models.IntegerField(default=0,blank=True)
 
     def publish(self):
         self.created_date = timezone.now()
         self.save()
     def __str__(self):
+        self.subject,
+        self.author,
+        self.description,
+        self.created_date,
+        self.votes,
+        self.answers,
+        ", ".join(t.name for t in self.tag.all()),
         return self.subject
 
     @classmethod

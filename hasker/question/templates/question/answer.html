@@ -1,0 +1,18 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="mb-3">
+
+    <h1>Are you good in the topic?</h1>
+
+    <form method="POST" action="" class="mb-3">
+        <div class="input-group mb-3">
+            <textarea class="form-control" rows="8" name="text" placeholder="Write your answer here...">{% if form.text.value != None %}{{ form.text.value|stringformat:'s' }}{% endif %}</textarea>
+        </div>
+
+            <button class="btn btn-primary">Push</button>
+        {% csrf_token %}
+    </form>
+
+</div>
+{% endblock %}

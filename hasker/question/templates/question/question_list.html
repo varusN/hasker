@@ -1,33 +1,51 @@
 {% extends 'base/base.html' %}
-{% block content %}
-    <nav class="nav">
-        <div class="container">
-            <ul class="nav justify-content-center">
-                <li {% if view.ordering == '-posted' %} {% endif %}><a class="nav-link" href="{% url 'question:latest' %}">Latest</a></li>
-                <b class="nav-link">|</b>
-                <li {% if view.ordering == '-rating' %} {% endif %}><a class="nav-link" href="{% url 'question:top' %}">Top</a></li>
-            </ul>
-        </div>
-    </nav>
 
-    {% for question in questions %}
-        <div >
-            <h1><a href="{% url 'question:details' question_id=question.pk %}">{{ question.subject }}</a></h1>
-            <p >{{ question.description|truncatechars:300 }}</p>
-            <p>Asked {{ question.created_date }}</p>
+{% block content %}
+    <main role="main" class="container">
+        <div class="row">
+            <table class="table">
+                <td width="70%">
+                    <div class="">
+                                                            <nav class="nav">
+                                                                <div class="container">
+                                                                    <ul class="nav justify-content-center">
+                                                                        <li><a class="nav-link" href="{% url 'question:latest' %}">Latest</a></li>
+                                                                        <b class="nav-link">|</b>
+                                                                        <li><a class="nav-link" href="{% url 'question:top' %}">Top</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </nav>
+
+                                                            {% for question in questions %}
+                                                                <div >
+                                                                    <h1><a class="fs-3 link-primary  link-offset-2 link-underline-opacity-0" href="{% url 'question:details' question_id=question.pk %}">{{ question.subject }}</a></h1>
+                                                                    <p >{{ question.description|truncatechars:300 }}</p>
+                                                                    <p>Asked {{ question.created_date }}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <div>
+                                                                        <div class="mb-1">
+                                                                            {% for tag in question.tag.all %}
+                                                                            <a class="btn btn-success btn-sm" href="{% url 'question:tag' tag=tag.name %}">{{ tag.name }}</a>
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="mb-1">
+                                                                        <a class="btn btn-outline-primary btn-sm" href="{% url 'question:details' question_id=question.pk %}">{{ question.answers }} answers</a>
+                                                                        <a class="btn btn-outline-danger btn-sm" href="{% url 'question:details' question_id=question.pk %}">{{ question.votes }} votes</a>
+                                                                    </div>
+                                                                </div>
+                                                            {% endfor %}
+                    </div>
+                </td>
+                <td width="30%">
+                    <div  class="container">
+                        {% block sidebar %}
+                        {% include "base/content/sidebar.html" %}
+                        {% endblock %}
+                    </div>
+                </td>
+            </table>
         </div>
-        <div>
-            <div>
-                <div class="mb-1">
-                    {% for tag in question.tag.all %}
-                    <a class="btn btn-success btn-sm" href="{% url 'question:tag' tag=tag.name %}">{{ tag.name }}</a>
-                {% endfor %}
-                </div>
-            </div>
-            <div class="mb-1">
-                <a class="btn btn-outline-primary btn-sm" href="{% url 'question:details' question_id=question.pk %}">{{ question.answers }} answers</a>
-                <a class="btn btn-outline-danger btn-sm" href="{% url 'question:details' question_id=question.pk %}">{{ question.votes }} votes</a>
-            </div>
-        </div>
-    {% endfor %}
+    </main>
 {% endblock %}

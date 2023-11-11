@@ -1,42 +1,64 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-<div class="mb-3">
+    <main role="main" class="container">
+        <div class="row">
+            <table class="table">
+                <td width="70%">
+                    <div class="">
+                        <div class="mb-3">
 
-    <h1>What do you want to get answer for?</h1>
+                            <h1>What do you want to get answer for?</h1>
 
-    <form method="POST" action="" class="mb-3">
-        <div class="form-label">
-            <input
-                class="form-control"
-                type="text" name="subject"
-                placeholder="Subject"
-                required
-                {% if form.subgect.value != None %}value="{{ form.subgect.value|stringformat:'s' }}"{% endif %}
-            >
+                            <form method="POST" action="" class="mb-3">
+                                <div class="form-label">
+                                    <input
+                                        class="form-control"
+                                        type="text" name="subject"
+                                        placeholder="Subject"
+                                        required
+                                        {% if form.subgect.value != None %}value="{{ form.subgect.value|stringformat:'s' }}"{% endif %}
+                                    >
+                                </div>
+                                    {% if form.subgect.errors %}
+                                        <div class="alert alert-danger" role="alert" {{ form.subgect.errors }}</div>
+                                    {% endif %}
+                                <div class="input-group mb-3">
+                                    <textarea class="form-control" rows="8" name="description" placeholder="Write your questions here...">{% if form.description.value != None %}{{ form.description.value|stringformat:'s' }}{% endif %}</textarea>
+                                </div>
+                                    {% if form.description.errors %}
+                                        <div class="alert alert-danger" role="alert" {{ form.description.errors }}</div>
+                                    {% endif %}
+                                <div class="input-group mb-3">
+                                    <div class="form-label">
+                                        <input
+                                            class="form-control {% if form.tags.errors %} form-text {% endif %}"
+                                            type="text"
+                                            name="tags"
+                                            placeholder="Tags (comma separated)"
+                                            {% if form.tags.value != None %}value="{{ form.tags.value|stringformat:'s' }}"{% endif %}
+                                        >
+                                    </div>
+                                </div>
+
+                                    <button class="btn btn-primary">Push</button>
+                                    {% if form.tags.errors %}
+                                        <div class="alert alert-danger" role="alert" {{ form.tags.errors }}</div>
+                                    {% endif %}
+                                {% csrf_token %}
+                            </form>
+
+                        </div>
+                   </div>
+                </td>
+                <td width="30%">
+                    <div  class="container">
+                        {% block sidebar %}
+                        {% include "base/content/sidebar.html" %}
+                        {% endblock %}
+                    </div>
+                </td>
+            </table>
         </div>
-
-        <div class="input-group mb-3">
-            <textarea class="form-control" rows="8" name="description" placeholder="Write your questions here...">{% if form.description.value != None %}{{ form.description.value|stringformat:'s' }}{% endif %}</textarea>
-        </div>
-
-        <div class="input-group mb-3">
-            <div class="form-label">
-                <input
-                    class="form-control {% if form.tags.errors %} form-text {% endif %}"
-                    type="text"
-                    name="tags"
-                    placeholder="Tags (comma separated)"
-                    {% if form.tags.value != None %}value="{{ form.tags.value|stringformat:'s' }}"{% endif %}
-                >
-            </div>
-        </div>
-            {% if form.tags.errors %}
-                <div class="alert alert-danger" role="alert" {{ form.tags.errors }}</div>
-            {% endif %}
-            <button class="btn btn-primary">Push</button>
-        {% csrf_token %}
-    </form>
-
-</div>
+    </main>
 {% endblock %}

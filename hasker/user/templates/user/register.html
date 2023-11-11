@@ -1,0 +1,19 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+  Register
+{% endblock %}
+
+{% block content %}
+<main class="container w-50 m-auto">
+        <h3>Log In</h3>
+  <div class="content w-50">
+    <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input class="btn btn-primary" type="submit" value="Register">
+    </form>
+    </div>
+</main>
+{% endblock %}

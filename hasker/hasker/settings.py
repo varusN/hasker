@@ -144,3 +144,8 @@ STATIC_ROOT = BASE_DIR / 'static'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CSRF_FAILURE_VIEW = 'user.views.error_403_csrf_failure'
+CSRF_COOKIE_SECURE = True  # Default: False - Means will only send cookie via HTTPS (not HTTP)
+CSRF_USE_SESSIONS = False  # Default: False - Store CSRF token in Session as opposed to in cookie
+CSRF_COOKIE_HTTPONLY = False  # Default: False - True = client JavaScript cannot access the cookie

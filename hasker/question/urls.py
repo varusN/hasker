@@ -1,6 +1,8 @@
 from django.urls import path
 
 from . import views
+from user.urls import app_name
+
 
 app_name = 'question'
 
@@ -10,12 +12,10 @@ urlpatterns = [
     path('top/', views.TopQuestions.as_view(), name='top'),
     path("search/", views.SearchQuestions.as_view(), name="search"),
     path("tag/<tag>", views.TagQuestions.as_view(), name="tag"),
-    path('details/<int:question_id>/', views.Details.as_view(), name='details'),
+    path('details/<int:question_id>/', views.details, name='details'),
+    path('edit/<int:question_id>/', views.EditQuestion.as_view(), name='edit'),
     path('ask/', views.AskQuestion.as_view(), name='ask'),
-    path('search/', views.Questions.as_view(), name='search'),
-    path('profile/', views.Questions.as_view(), name='profile'),
+    path('answer/<int:question_id>/', views.AnswerQuestion.as_view(), name='answer'),
     path('logout/', views.Questions.as_view(), name='logout'),
-    path('login/', views.Questions.as_view(), name='login'),
-    path('signup/', views.Questions.as_view(), name='signup'),
-
+    path('signup/', views.TopQuestions.as_view(), name='signup'),
 ]

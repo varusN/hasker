@@ -20,14 +20,14 @@
             <img src="{{ request.user.get_thumb_url }}" alt="mdo" width="32" height="32" class="rounded-circle">
           </a>
           <ul class="dropdown-menu text-small">
-              <li><a class="dropdown-item" href="{% url 'question:profile' %}">Profile</a></li>
+              <li><a class="dropdown-item" href="{% url 'site_auth:profile' %}">Profile</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="{% url 'question:logout' %}">Sign out</a></li>
+              <li><a class="dropdown-item" href="{% url 'site_auth:logout' %}">Sign out</a></li>
           </ul>
         {% else %}
           <div class="text-end">
-            <button type="button" href="{% url 'question:login' %}" class="btn btn-light me-2">Login</button>
-            <button type="button" href="{% url 'question:signup' %}" class="btn btn-warning">Sign-up</button>
+            <a class="btn btn-light me-2" href="{% url 'site_auth:login' %}" > Login</a>
+            <button type="button" href="{% url 'site_auth:signup' %}" class="btn btn-warning">Sign-up</button>
           </div>
         {% endif %}
         </div>

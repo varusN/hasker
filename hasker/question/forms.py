@@ -26,11 +26,8 @@ class QuestionForm(forms.ModelForm):
         tags = set(filter(bool, tags))
 
         if len(tags) > settings.QUESTIONS_MAX_TAGS:
-            print('WTF')
             raise forms.ValidationError(f"The maximum number of tags is {settings.QUESTIONS_MAX_TAGS}.")
 
         if any(len(tag) > settings.QUESTIONS_TAGS_LENGTH for tag in tags):
             raise forms.ValidationError(f"Max tag lenght {settings.QUESTIONS_TAGS_LENGTH} characters.")
         return sorted(tags)
-
-

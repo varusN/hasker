@@ -1,0 +1,13 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<h1> User Info</h1>
+{% if user.is_authenticated %}
+    <p>Username: {{ user.username }}</p>
+{% else %}
+
+<h1> ANONIMUS  Info</h1>
+
+{% endif %}
+
+{% endblock %}

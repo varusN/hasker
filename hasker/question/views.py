@@ -3,25 +3,22 @@ from django.http import HttpResponse, HttpRequest
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView,ListView, CreateView
+from django.views.generic import View, TemplateView,ListView, CreateView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
 from django.db.models import Q, F
 from django.urls import reverse_lazy
 from django.db import transaction
+from django.views.generic.edit import UpdateView
 
-from .models import Question
-from .models import Answer
-from .forms import QuestionForm
+from .models import Question, Answer
+from .forms import QuestionForm, AnswerForm
 
-class Trends:
+class Trends():
     extra_context = {
-        "trands": Question.trending(count=10),
+        "trend": Question.trending(count=10)
     }
-    # def get_context_data(self, *args, **kwargs):
-    #     context = super().get_context_data(*args, **kwargs)
-    #     context["trending"] = Question.trending(count=10)
-    #     return context
+
 
 class Questions(Trends, ListView):
     template_name = "question/question_list.html"
@@ -39,8 +36,7 @@ class LatestQuestions(Questions):
     ordering = ("-created_date")
 
 class TopQuestions(Questions):
-    ordering = ("-votes", "-created_date")
-
+    ordering = ("-votes")
 
 class SearchQuestions(Questions):
     ordering = ("-votes", "-created_date")
@@ -82,33 +78,21 @@ class TagQuestions(Questions):
 
 def details(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'question/details.html', {'question': question})
-
-class Details(Trends, View):
-    template_name = "question/question_list.html"
-
-    def get(self, request, question_id):
-        question = get_object_or_404(Question, pk=self.pk)
-        return render(request,
-                      self.template_name,
-                      {'question': question},
-                      )
-def post():
-    print('AAAAAAAAAA')
-def vote_up(self):
-    print('UP')
-    reporter = Question.objects.get(pk=self.pk)
-    reporter.stories_filed = F('votes') + 1
-    reporter.save()
-
-def vote_down(self):
-    reporter = Question.objects.get(pk=self.pk)
-    reporter.stories_filed = F('votes') - 1
-    reporter.save()
-
+    form = QuestionForm(question_id, request.POST)
+    if request.method == 'POST':
+        if (request.POST['vote']):
+            form = QuestionForm(question_id, request.POST)
+            if (request.POST['vote'] == 'up'):
+                question.votes += 1
+            else:
+                question.votes -= 1
+            question.save()
+            messages.success(request, "Thank you for voting!")
+            return redirect('question:details', question_id=question_id)
+    else:
+        return render(request, 'question/details.html', {'question': question})
 
 class AskQuestion(Trends, LoginRequiredMixin, CreateView):
-
     form_class = QuestionForm
     model = Question
     template_name = "question/ask_question.html"
@@ -125,5 +109,34 @@ class AskQuestion(Trends, LoginRequiredMixin, CreateView):
 
         messages.success(
             self.request, "Your question posted!"
+        )
+        return redirect(self.success_url)
+
+
+class EditQuestion(Trends, LoginRequiredMixin, UpdateView):
+    model = Question
+    pk_url_kwarg = "question_id"
+    template_name = "question/update_question.html"
+    fields = ["subject", "description"]
+    def get_success_url(self) -> str:
+        return reverse_lazy('question:details', kwargs={'question_id': self.object.pk})
+
+
+class AnswerQuestion(Trends, LoginRequiredMixin, CreateView):
+    form_class = AnswerForm
+    model = Answer
+    template_name = "question/answer.html"
+
+    def get_success_url(self) -> str:
+        return reverse_lazy('question:details', kwargs={'question_id': self.object.pk})
+
+    @transaction.atomic
+    def form_valid(self, form):
+        question = form.save(commit=False)
+        question.author = self.request.user
+        question.save()
+
+        messages.success(
+            self.request, "Your answer posted!"
         )
         return redirect(self.success_url)
