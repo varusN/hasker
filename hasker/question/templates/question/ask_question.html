@@ -1,5 +1,7 @@
 {% extends 'base/base.html' %}
 
+{% block title %}Ask Question{% endblock %}
+
 {% block content %}
     <main role="main" class="container">
         <div class="row">
@@ -50,13 +52,6 @@
 
                         </div>
                    </div>
-                </td>
-                <td width="30%">
-                    <div  class="container">
-                        {% block sidebar %}
-                        {% include "base/content/sidebar.html" %}
-                        {% endblock %}
-                    </div>
                 </td>
             </table>
         </div>

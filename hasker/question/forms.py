@@ -1,7 +1,7 @@
 import re
 
-from django.conf import settings
 from django import forms
+from django.conf import settings
 
 from .models import Answer, Question
 
@@ -9,7 +9,9 @@ from .models import Answer, Question
 class AnswerForm(forms.ModelForm):
     class Meta:
         model = Answer
-        fields = ("text",)
+        fields = ("text", "question")
+        widgets = {"question": forms.HiddenInput()}
+
 
 class QuestionForm(forms.ModelForm):
     tags = forms.CharField(max_length=512, required=False)
@@ -26,8 +28,12 @@ class QuestionForm(forms.ModelForm):
         tags = set(filter(bool, tags))
 
         if len(tags) > settings.QUESTIONS_MAX_TAGS:
-            raise forms.ValidationError(f"The maximum number of tags is {settings.QUESTIONS_MAX_TAGS}.")
+            raise forms.ValidationError(
+                f"The maximum number of tags is {settings.QUESTIONS_MAX_TAGS}."
+            )
 
         if any(len(tag) > settings.QUESTIONS_TAGS_LENGTH for tag in tags):
-            raise forms.ValidationError(f"Max tag lenght {settings.QUESTIONS_TAGS_LENGTH} characters.")
+            raise forms.ValidationError(
+                f"Max tag lenght {settings.QUESTIONS_TAGS_LENGTH} characters."
+            )
         return sorted(tags)

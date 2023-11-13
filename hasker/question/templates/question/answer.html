@@ -1,18 +1,33 @@
 {% extends 'base/base.html' %}
 
+{% block title %}Answer{% endblock %}
 {% block content %}
-<div class="mb-3">
-
-    <h1>Are you good in the topic?</h1>
-
-    <form method="POST" action="" class="mb-3">
-        <div class="input-group mb-3">
-            <textarea class="form-control" rows="8" name="text" placeholder="Write your answer here...">{% if form.text.value != None %}{{ form.text.value|stringformat:'s' }}{% endif %}</textarea>
+    <main role="main" class="container">
+        <div class="row">
+            <table class="table">
+                <td width="70%">
+                    <div class="">
+                        <div class="mb-3">
+                        <h1>Are you good in the topic?</h1>
+                        <form method="post" class="mb-3">
+                            {{ form.as_p }}
+                                    {% if form.text.errors %}
+                                        <div class="alert alert-danger" role="alert" {{ form.text.errors }}</div>
+                                    {% endif %}
+                            <button class="btn btn-primary">Push</button>
+                            {% csrf_token %}
+                        </form>
+                        </div>
+                    </div>
+                </td>
+                <td width="30%">
+                    <div  class="container">
+                        {% block sidebar %}
+                        {% include "base/content/sidebar.html" %}
+                        {% endblock %}
+                    </div>
+                </td>
+            </table>
         </div>
-
-            <button class="btn btn-primary">Push</button>
-        {% csrf_token %}
-    </form>
-
-</div>
+    </main>
 {% endblock %}

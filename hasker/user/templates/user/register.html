@@ -6,10 +6,10 @@
 
 {% block content %}
 <main class="container w-50 m-auto">
-        <h3>Log In</h3>
+        <h3>Registration</h3>
   <div class="content w-50">
     <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
       <input class="btn btn-primary" type="submit" value="Register">

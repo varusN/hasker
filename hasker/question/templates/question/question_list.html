@@ -1,41 +1,43 @@
 {% extends 'base/base.html' %}
 
+{% block title %}Questions{% endblock %}
+
 {% block content %}
     <main role="main" class="container">
         <div class="row">
             <table class="table">
                 <td width="70%">
                     <div class="">
-                                                            <nav class="nav">
-                                                                <div class="container">
-                                                                    <ul class="nav justify-content-center">
-                                                                        <li><a class="nav-link" href="{% url 'question:latest' %}">Latest</a></li>
-                                                                        <b class="nav-link">|</b>
-                                                                        <li><a class="nav-link" href="{% url 'question:top' %}">Top</a></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </nav>
+                                <nav class="nav">
+                                    <div class="container">
+                                        <ul class="nav justify-content-center">
+                                            <li><a class="nav-link" href="{% url 'question:latest' %}">Latest</a></li>
+                                            <b class="nav-link">|</b>
+                                            <li><a class="nav-link" href="{% url 'question:top' %}">Top</a></li>
+                                        </ul>
+                                    </div>
+                                </nav>
 
-                                                            {% for question in questions %}
-                                                                <div >
-                                                                    <h1><a class="fs-3 link-primary  link-offset-2 link-underline-opacity-0" href="{% url 'question:details' question_id=question.pk %}">{{ question.subject }}</a></h1>
-                                                                    <p >{{ question.description|truncatechars:300 }}</p>
-                                                                    <p>Asked {{ question.created_date }}</p>
-                                                                </div>
-                                                                <div>
-                                                                    <div>
-                                                                        <div class="mb-1">
-                                                                            {% for tag in question.tag.all %}
-                                                                            <a class="btn btn-success btn-sm" href="{% url 'question:tag' tag=tag.name %}">{{ tag.name }}</a>
-                                                                            {% endfor %}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="mb-1">
-                                                                        <a class="btn btn-outline-primary btn-sm" href="{% url 'question:details' question_id=question.pk %}">{{ question.answers }} answers</a>
-                                                                        <a class="btn btn-outline-danger btn-sm" href="{% url 'question:details' question_id=question.pk %}">{{ question.votes }} votes</a>
-                                                                    </div>
-                                                                </div>
-                                                            {% endfor %}
+                                {% for question in questions %}
+                                    <div >
+                                        <h1><a class="fs-3 link-primary  link-offset-2 link-underline-opacity-0" href="{% url 'question:details' question_id=question.pk %}">{{ question.subject }}</a></h1>
+                                        <p >{{ question.description|truncatechars:300 }}</p>
+                                        <p>Asked {{ question.created_date }}</p>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <div class="mb-1">
+                                                {% for tag in question.tag.all %}
+                                                <a class="btn btn-success btn-sm" href="{% url 'question:tag' tag=tag.name %}">{{ tag.name }}</a>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="mb-1">
+                                            <a class="btn btn-outline-primary btn-sm" href="{% url 'question:details' question_id=question.pk %}">{{ question.answers }} answers</a>
+                                            <a class="btn btn-outline-danger btn-sm" href="{% url 'question:details' question_id=question.pk %}">{{ question.votes }} votes</a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
                     </div>
                 </td>
                 <td width="30%">
@@ -47,5 +49,23 @@
                 </td>
             </table>
         </div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a class="btn btn-outline-primary btn-sm" href="?page=1">&laquo; first</a>
+            <a class="btn btn-outline-primary btn-sm" href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+        {% if page_obj.has_next %}
+            <a class="btn btn-outline-primary btn-sm" href="?page={{ page_obj.next_page_number }}">next</a>
+            <a class="btn btn-outline-primary btn-sm" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
     </main>
 {% endblock %}

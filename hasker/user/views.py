@@ -1,14 +1,20 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.views import (
-    LoginView as LoginViewGeneric,
-    LogoutView as LogoutViewGeneric,
-)
-from django.http import HttpResponseRedirect
-from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView
+from django.contrib.auth.views import LoginView as LoginViewGeneric
+from django.contrib.auth.views import LogoutView as LogoutViewGeneric
+from django.contrib.auth.views import \
+    PasswordChangeView as PasswordChangeViewGeneric
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, UpdateView
+from user.forms import AuthenticationForm, SettingsForm, UserCreationForm
 
-from .forms import AuthenticationForm, UserCreationForm
+
+class PasswordChangeView(PasswordChangeViewGeneric):
+    template_name = "user/change_password.html"
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy("question:index")
 
 
 class LoginView(LoginViewGeneric):
@@ -18,16 +24,15 @@ class LoginView(LoginViewGeneric):
 
 
 class LogOutView(LogoutViewGeneric):
-    next_page = reverse_lazy("site_auth:profile")
+    next_page = reverse_lazy("question:index")
 
 
 class SignUpView(CreateView):
     form_class = UserCreationForm
     template_name = "user/register.html"
-    success_url = reverse_lazy("site_auth:profile")
+    success_url = reverse_lazy("question:index")
 
     def form_valid(self, form):
-        print('CASDADASDAS')
         response = super().form_valid(form)
         # user: AbstractUser = self.object
         username = form.cleaned_data.get("username")
@@ -41,17 +46,18 @@ class SignUpView(CreateView):
         return response
 
 
-def error_403_csrf_failure(request, reason=""):
-    if request.path == '/user/login/' and request.user.is_authenticated:
-        next = request.GET.get('next', '/')
-        return HttpResponseRedirect(next)
+class SettingsView(UpdateView):
+    form_class = SettingsForm
+    success_url = reverse_lazy("site_auth:profile")
+    template_name = "user/profile.html"
 
-    url = reverse('login') + '?next=' + request.path
-    context = {
-        'page_title': "Authentication Error",
-        'continue_url': url,
-        'reason': reason,
-    }
-    response = render(request, "base/403_csrf.html", context=context)
-    response.status_code = 403
-    return response
+    def form_valid(self, *args, **kwargs):
+        messages.success(self.request, "Your settings have been successfully updated!")
+        return super().form_valid(*args, **kwargs)
+
+    def form_invalid(self, *args, **kwargs):
+        self.object.refresh_from_db()
+        return super().form_invalid(*args, **kwargs)
+
+    def get_object(self, queryset=None):
+        return self.request.user

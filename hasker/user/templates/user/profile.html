@@ -1,13 +1,50 @@
-{% extends 'base/base.html' %}
+{% extends "base/base.html" %}
+
+{% block title %}Profile{% endblock %}
+
 
 {% block content %}
-<h1> User Info</h1>
-{% if user.is_authenticated %}
-    <p>Username: {{ user.username }}</p>
-{% else %}
 
-<h1> ANONIMUS  Info</h1>
+<main class="container w-50 m-auto">
+        <h3> Hasker user </h3>
+        <br>
+  <div class="content w-50">
+        <div class="content w-50">
+              <img style="padding: 50px;" src="{{ request.user.get_photo_url }}" width="324" height="324"  alt="Photo"/>
+        </div>
+    <div class="tab-pane fade show active" id="pills-profile" role="tabpanel">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+        <div class="form-label">
+            <div class="container mb-3">
+                <input
+                    class="form-control {% if form.email.errors %} alert-danger {% endif %}"
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    required
+                    {% if form.email.value != None %}value="{{ form.email.value|stringformat:'s' }}"{% endif %}
+                >
+            </div>
+            {% if form.email.errors %}
+            <div class="alert alert-danger">{{ form.email.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="container">
+            <div class="input-group mb-3">
+                <input class="form-control {% if form.photo.errors %} alert-danger {% endif %}" type="file" placeholder="Select your photo" name="photo" accept="image/*">
+            </div>
+            {% if form.photo.errors %}
+                <div class="alert-danger">{{ form.photo.errors }}</div>
+            {% endif %}
+        </div>
+  <div class="content">
+      <a class="btn btn-primary" href="{% url 'site_auth:password_change' %}">Change password</a>
+      <input class="btn btn-primary" type="submit" value="Save settings">
+  </div>
+    </form>
+    </div>
+</main>
 
-{% endif %}
 
-{% endblock %}
+{% endblock content %}

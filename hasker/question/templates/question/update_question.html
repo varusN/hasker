@@ -1,14 +1,31 @@
 {% extends 'base/base.html' %}
 
+{% block title %}Update Question{% endblock %}
+
+
 {% block content %}
-<div class="mb-3">
-
-
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input class="btn btn-primary" type="submit" value="Update">
-</form>
-
-</div>
+    <main role="main" class="container">
+        <div class="row">
+            <table class="table">
+                <td width="70%">
+                    <div class="">
+                    <div class="mb-3">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input class="btn btn-primary" type="submit" value="Update">
+                    </form>
+                    </div>
+                   </div>
+                </td>
+                <td width="30%">
+                    <div  class="container">
+                        {% block sidebar %}
+                        {% include "base/content/sidebar.html" %}
+                        {% endblock %}
+                    </div>
+                </td>
+            </table>
+        </div>
+    </main>
 {% endblock %}

@@ -1,5 +1,8 @@
 {% extends 'base/base.html' %}
 
+{% block title %}Login{% endblock %}
+
+
 {% block content %}
 <main class="container w-50 m-auto">
         <h3>Log In</h3>
@@ -12,7 +15,6 @@
         <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
         <a href="{% url 'site_auth:signup' %}" class="btn btn-outline-dark btn-block mb-4">Sign up</a>
         </form>
-
     </div>
 </main>
 <!-- Pills content -->

@@ -1,8 +1,10 @@
-from django.contrib.auth.forms import (
-    AuthenticationForm as AuthenticationFormGeneric,
-    UserCreationForm as UserCreationFormGeneric,
-)
 from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import \
+    AuthenticationForm as AuthenticationFormGeneric
+from django.contrib.auth.forms import UserChangeForm as UserChangeFormGeneric
+from django.contrib.auth.forms import \
+    UserCreationForm as UserCreationFormGeneric
 
 
 class AuthenticationForm(AuthenticationFormGeneric):
@@ -17,7 +19,8 @@ class AuthenticationForm(AuthenticationFormGeneric):
 
 class UserCreationForm(UserCreationFormGeneric):
     class Meta(UserCreationFormGeneric.Meta):
-        fields = "username", "email",
+        model = get_user_model()
+        fields = ("username", "email", "photo", "password1", "password2")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -26,3 +29,11 @@ class UserCreationForm(UserCreationFormGeneric):
             field: forms.Field
             widget: forms.Widget = field.widget
             widget.attrs["class"] = "form-control"
+
+
+class SettingsForm(UserChangeFormGeneric):
+    password = None
+
+    class Meta:
+        model = get_user_model()
+        fields = ("email", "photo")
