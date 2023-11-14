@@ -31,7 +31,7 @@ services:
         - 80:80
     volumes:
         - /etc/nginx/site-available:/etc/nginx/conf.d
-        - /home/app/hasker/static/:/home/app/hasker/static/
+        - /home/app/hasker/media/:/hasker/media
     networks:
       vpcbr:
         ipv4_address: 10.88.64.3

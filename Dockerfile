@@ -8,8 +8,8 @@ ENV PYTHONUNBUFFERED 1
 RUN pip3 install --upgrade pip
 
 
-COPY ../requirements.txt ./
+COPY .. .
 RUN pip3 install -r requirements.txt
 EXPOSE 8000
-CMD python hasker/manage.py migrate
-CMD python hasker/manage.py runserver
+CMD python manage.py migrate
+CMD python manage.py runserver
