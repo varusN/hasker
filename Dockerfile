@@ -1,18 +1,15 @@
 FROM python:3.11
 
-ENV DockerHome=/home/app/hasker
-
-RUN mkdir -p $DockerHOME
-
-WORKDIR $DockerHOME
-
+WORKDIR /usr/src/app
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 RUN pip3 install --upgrade pip
 
+
+COPY ../requirements.txt ./
 RUN pip3 install -r requirements.txt
 EXPOSE 8000
-CMD python manage.py migrate
-CMD python manage.py runserver
+CMD python hasker/manage.py migrate
+CMD python hasker/manage.py runserver
