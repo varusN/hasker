@@ -9,7 +9,7 @@ from user.models import User
 
 
 class Question(models.Model):
-    subject = models.CharField(max_length=255)
+    subject = models.CharField(max_length=255, null=False)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     description = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)
@@ -28,8 +28,8 @@ class Question(models.Model):
         return self.subject
 
     @classmethod
-    def trending(cls, count: int = 5) -> models.QuerySet:
-        return cls.objects.order_by("-votes")[:count]
+    def trending(cls, count):
+        return cls.objects.filter(votes__gt=0).order_by("-votes")[:count]
 
     @classmethod
     def get_question(cls, pk):
@@ -39,15 +39,12 @@ class Question(models.Model):
         else:
             raise Http404
 
-    @classmethod
-    def add_tags(self, tags: List[str], user):
-        if self.pk is None:
-            raise ValueError("Instance should be saved.")
-        for raw_tag in tags:
+    def add_tags(self, tags):
+        for t in tags:
             try:
-                tag = Tag.objects.get(name=raw_tag)
+                tag = Tag.objects.get(name=t)
             except ObjectDoesNotExist:
-                tag = Tag.objects.create(added=user, name=raw_tag)
+                tag = Tag.objects.create(name=t)
             self.tag.add(tag)
 
 
@@ -59,23 +56,9 @@ class Answer(models.Model):
     votes = models.IntegerField(default=0, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
-    @staticmethod
-    def get_answers(question_id):
-        return Answer.objects.filter(question__id=question_id).order_by(
-            "-votes", "-created_date"
-        )
-
 
 class Tag(models.Model):
     added = models.DateTimeField(auto_now_add=True)
-    added_by = models.ForeignKey(
-        User,
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name="added_tags",
-        related_query_name="added_tag",
-    )
     name = models.CharField(blank=False, max_length=settings.QUESTIONS_TAGS_LENGTH)
 
     def __str__(self):

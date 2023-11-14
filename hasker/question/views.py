@@ -14,7 +14,6 @@ from .models import Answer, Question
 
 
 class Trends:
-
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context["trend"] = Question.trending(count=10)
@@ -125,8 +124,8 @@ class AskQuestion(Trends, LoginRequiredMixin, CreateView):
         question.author = self.request.user
         question.save()
 
-        raw_tags = form.cleaned_data["tags"]
-        question.add_tags(raw_tags, self.request.user)
+        tags = form.cleaned_data["tags"]
+        question.add_tags(tags)
         messages.success(self.request, "Your question posted!")
         return HttpResponseRedirect(
             reverse("question:details", kwargs={"question_id": question.id})

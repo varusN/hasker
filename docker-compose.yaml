@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0
+    container_name: hasker_db
+    cap_add:
+      - SYS_NICE
+    restart: always
+    environment:
+      - MYSQL_DATABASE=hasker
+      - MYSQL_ROOT_PASSWORD=admin
+    ports:
+      - '3306:3306'
+    volumes:
+      - db:/var/lib/mysql
+  nginx:
+      image: nginx:latest
+      container_name: hasker_nginx
+      ports:
+          - "80:80"
+      volumes:
+          - /etc/nginx/site-available:/etc/nginx/conf.d

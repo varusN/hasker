@@ -14,6 +14,4 @@ urlpatterns = [
     path("edit/<int:question_id>/", views.EditQuestion.as_view(), name="edit"),
     path("ask/", views.AskQuestion.as_view(), name="ask"),
     path("answer/<int:question_id>/", views.AnswerQuestion.as_view(), name="answer"),
-    path("logout/", views.Questions.as_view(), name="logout"),
-    path("signup/", views.TopQuestions.as_view(), name="signup"),
 ]
