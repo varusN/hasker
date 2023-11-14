@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
+PROJECT_NAME = 'Hasker'
+
 PAGINATE_ANSWERS = 25
 QUESTIONS_MAX_TAGS = 3
 QUESTIONS_TAGS_LENGTH = 15

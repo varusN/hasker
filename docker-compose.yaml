@@ -21,12 +21,6 @@ services:
     container_name: hasker_nginx
     build: ./nginx
     restart: on-failure
-    build: .
-    command: sh -c "python manage.py makemigrations &&
-                        python manage.py migrate &&
-                        gunicorn microservice_sample_app.wsgi:application --bind 0.0.0.0:${APP_PORT}"
-    expose:
-      - 8000
     ports:
         - 80:80
     volumes:
