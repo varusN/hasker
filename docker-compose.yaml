@@ -10,13 +10,26 @@ services:
       - MYSQL_DATABASE=hasker
       - MYSQL_ROOT_PASSWORD=admin
     ports:
-      - '3306:3306'
+      - 3306:3306
     volumes:
       - db:/var/lib/mysql
+    networks:
+      vpcbr:
+        ipv4_address: 10.99.0.2
   nginx:
-      image: nginx:latest
-      container_name: hasker_nginx
-      ports:
-          - "80:80"
-      volumes:
-          - /etc/nginx/site-available:/etc/nginx/conf.d
+    image: nginx:latest
+    container_name: hasker_nginx
+    ports:
+        - publish=80:80
+    volumes:
+        - /etc/nginx/site-available:/etc/nginx/conf.d
+    networks:
+      vpcbr:
+        ipv4_address: 10.99.0.3
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.99.0.0/16
+          gateway: 10.99.0.1
