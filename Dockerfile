@@ -4,6 +4,8 @@ WORKDIR /home/hasker/
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+RUN unset PYTHONPATH
+RUN unset PYTHONHOME
 
 RUN pip3 install --upgrade pip
 RUN apt update; apt-get install libpcre3 libpcre3-dev -y
