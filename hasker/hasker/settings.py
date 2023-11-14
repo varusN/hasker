@@ -95,7 +95,7 @@ DATABASES = {
         "NAME": "hasker",
         "USER": "root",
         "PASSWORD": "admin",
-        "HOST": "127.0.0.1",
+        "HOST": "10.88.64.2",
         "PORT": "3306",
     }
 }

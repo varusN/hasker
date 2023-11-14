@@ -15,21 +15,28 @@ services:
       - db:/var/lib/mysql
     networks:
       vpcbr:
-        ipv4_address: 10.99.0.2
+        ipv4_address: 10.88.64.2
   nginx:
     image: nginx:latest
     container_name: hasker_nginx
     ports:
-        - publish=80:80
+        - 80:80
     volumes:
         - /etc/nginx/site-available:/etc/nginx/conf.d
     networks:
       vpcbr:
-        ipv4_address: 10.99.0.3
+        ipv4_address: 10.88.64.3
+
+volumes:
+  redis:
+    driver: local
+  db:
+    driver: local
+
 networks:
   vpcbr:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.99.0.0/16
-          gateway: 10.99.0.1
+        - subnet: 10.88.64.0/24
+          gateway: 10.88.64.1
