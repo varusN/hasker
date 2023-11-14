@@ -1,6 +1,3 @@
-# Makefile for the django project.
-#
-
 prod:
 	@echo "Installing python & requirments... for Hasker installation"
 	@sleep 2
