@@ -19,6 +19,7 @@ services:
   nginx:
     image: nginx:latest
     container_name: hasker_nginx
+    restart: always
     ports:
         - 80:80
     volumes:
