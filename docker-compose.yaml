@@ -39,6 +39,7 @@ volumes:
 
 networks:
   vpcbr:
+    name: hasker
     driver: bridge
     ipam:
       config:
