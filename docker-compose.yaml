@@ -23,7 +23,7 @@ services:
       - ./sock:/sock
     build:
       context: .
-      dockerfile: dockerfiles/docker_nginx.conf
+      dockerfile: docker/docker_nginx.conf
     depends_on:
       - django
     ports:
@@ -37,7 +37,7 @@ services:
       - ./sock:/sock
     build:
       context: .
-      dockerfile: dockerfiles/docker_django.conf
+      dockerfile: docker/docker_django.conf
     depends_on:
       - db
     #command: uwsgi --ini /etc/uwsgi.ini
