@@ -33,7 +33,7 @@ services:
     restart: always
     container_name: hasker
     volumes:
-      - ./code:/code
+      - ./hasker:/code
       - ./sock:/sock
     build:
       context: .
@@ -41,8 +41,7 @@ services:
     depends_on:
       - db
     #command: uwsgi --ini /etc/uwsgi.ini
-    command: uwsgi --ini /etc/uwsgi.ini
-    #command: bash -c "python /code/hasker/manage.py collectstatic --noinput && python /code/hasker/manage.py migrate && python /code/hasker/manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python /code/manage.py collectstatic --noinput && python /code/manage.py migrate && python /code/manage.py runserver 0.0.0.0:8000"
     ports:
       - 8000:8000
 
