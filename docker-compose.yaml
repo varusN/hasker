@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 services:
   db:
     image: mysql:8.0
@@ -13,36 +13,40 @@ services:
       - 3306:3306
     volumes:
       - db:/var/lib/mysql
-    networks:
-      vpcbr:
-        ipv4_address: 10.88.64.2
+
   nginx:
     image: nginx:latest
     container_name: hasker_nginx
-    build: ./nginx
     restart: on-failure
-    ports:
-        - 80:80
-    volumes:
-        - /etc/nginx/site-available:/etc/nginx/conf.d
-        - /home/hasker/media/:/home/hasker/hasker/media
-        - /home/hasker/uwsgi/:/home/hasker/uwsgi
-    networks:
-      vpcbr:
-        ipv4_address: 10.88.64.3
+  volumes:
+   - ./code:/code
+   - sock:/sock
+  build:
+   context: .
+   dockerfile: dockerfiles/docker_nginx.conf
+  depends_on:
+   - django
+  ports:
+    - "8080:8080"
 
+django:
+  restart: always
+  container_name: hasker
+  volumes:
+   - ./code:/code
+   - sock:/sock
+  build:
+   context: .
+   dockerfile: dockerfiles/docker_django.conf
+  depends_on:
+   - hasker_db
+  #command: uwsgi --ini /etc/uwsgi.ini
+  command: uwsgi --ini /etc/uwsgi.ini
+  #command: bash -c "python /code/hasker/manage.py collectstatic --noinput && python /code/hasker/manage.py migrate && python /code/hasker/manage.py runserver 0.0.0.0:8000"
+  ports:
+   - "8000:8000"
 
 volumes:
-  redis:
-    driver: local
   db:
     driver: local
 
-networks:
-  vpcbr:
-    name: hasker
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 10.88.64.0/24
-          gateway: 10.88.64.1

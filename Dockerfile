@@ -7,12 +7,13 @@ ENV PYTHONUNBUFFERED 1
 RUN unset PYTHONPATH
 RUN unset PYTHONHOME
 
+RUN mkdir /sock
+RUN chmod -R 666 /sock
+COPY ./conf/uwsgi/uwsgi.ini /etc/
+
 RUN pip3 install --upgrade pip
 RUN apt update; apt-get install libpcre3 libpcre3-dev -y
 RUN pip3 install uwsgi -I
 
 COPY .. .
-RUN pip3 install -r requirements.txt
-EXPOSE 8000
-CMD python /home/hasker/hasker/manage.py migrate
-CMD uwsgi --ini /home/hasker/conf/uwsgi/uwsgi.ini
+RUN pip3 install -Ur requirements.txt

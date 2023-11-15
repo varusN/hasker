@@ -4,7 +4,7 @@ prod:
 	@mkdir -p /etc/nginx/site-available
 	@mkdir -p /home/hasker/uwsgi
 	@cp -f conf/nginx/nginx-hasker.conf /etc/nginx/site-available
-	@cp -f conf/uwsgi/* /home/hasker/uwsgi
+	@cp -f conf/uwsgi/uwsgi_params /etc/nginx/
 	@docker compose up -d
 	@docker rm $(sudo docker stop $(sudo docker ps -a -q --filter="name=hasker_backend" --format="{{.ID}}")) || true
 	@docker rmi $(sudo docker images -a -q --filter="reference=hasker_backend" --format="{{.ID}}") || true
