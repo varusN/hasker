@@ -20,7 +20,7 @@ services:
     restart: on-failure
     volumes:
       - ./code:/code
-      - sock:/sock
+      - ./sock:/sock
     build:
       context: .
       dockerfile: dockerfiles/docker_nginx.conf
