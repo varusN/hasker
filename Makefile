@@ -2,7 +2,9 @@ prod:
 	@echo "Installing python & requirments... for Hasker installation"
 	@sleep 2
 	@mkdir -p /etc/nginx/site-available
+	@mdkir -p /home/hasker/uwsgi
 	@cp -f conf/nginx/nginx-hasker.conf /etc/nginx/site-available
+	@cp -f conf/uwsgi/* /home/hasker/uwsgi
 	@docker compose up -d
 	@docker rm $(sudo docker stop $(sudo docker ps -a -q --filter="name=hasker_backend" --format="{{.ID}}")) || true
 	@docker rmi $(sudo docker images -a -q --filter="reference=hasker_backend" --format="{{.ID}}") || true

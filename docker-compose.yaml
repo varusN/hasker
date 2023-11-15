@@ -26,7 +26,7 @@ services:
     volumes:
         - /etc/nginx/site-available:/etc/nginx/conf.d
         - /home/hasker/media/:/home/hasker/hasker/media
-        - /home/hasker/conf/uwsgi/:/home/hasker/conf/uwsgi
+        - /home/hasker/uwsgi/:/home/hasker/uwsgi
     networks:
       vpcbr:
         ipv4_address: 10.88.64.3
