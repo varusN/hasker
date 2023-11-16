@@ -51,9 +51,9 @@
                            </div>
                           <div class="container">
                               {% if user == question.author %}
-                                 <a href="{% url 'question:edit' question_id=question.pk %}">Edit</a>
+                                 <a class='btn btn-primary' href="{% url 'question:edit' question_id=question.pk %}">Edit</a>
                               {% endif %}
-                                 <a href="{% url 'question:answer' question_id=question.pk %}">Answer</a>
+                                 <a class='btn btn-primary' href="{% url 'question:answer' question_id=question.pk %}">Answer</a>
                           </div>
                         </div>
                     </td>

@@ -140,7 +140,9 @@ class EditQuestion(Trends, LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         question = form.save(commit=False)
-        messages.success(self.request, "Your answer changed!")
+        question.author = self.request.user
+        question.save()
+        messages.success(self.request, "Your question changed!")
         return HttpResponseRedirect(
             reverse(
                 "question:details", kwargs={"question_id": self.kwargs["question_id"]}
