@@ -23,7 +23,7 @@ services:
     restart: on-failure
     volumes:
       - ./code:/code
-      - ./sock:/sock
+      - /sock:/sock
     build:
       context: .
       dockerfile: docker/docker_nginx.conf
@@ -41,7 +41,7 @@ services:
     container_name: hasker
     volumes:
       - ./hasker:/code
-      - ./sock:/sock
+      - /sock:/sock
     build:
       context: .
       dockerfile: docker/docker_django.conf
