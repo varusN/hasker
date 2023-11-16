@@ -13,6 +13,9 @@ services:
       - 3306:3306
     volumes:
       - db:/var/lib/mysql
+    networks:
+      vpcbr:
+        ipv4_address: 10.88.64.2
 
   nginx:
     image: nginx:latest
@@ -28,6 +31,10 @@ services:
       - django
     ports:
       - 8080:8080
+    networks:
+      vpcbr:
+        ipv4_address: 10.88.64.3
+
 
   django:
     restart: always
@@ -40,12 +47,22 @@ services:
       dockerfile: docker/docker_django.conf
     depends_on:
       - db
-    #command: uwsgi --ini /etc/uwsgi.ini
-    command: bash -c "python /code/manage.py collectstatic --noinput && python /code/manage.py migrate && python /code/manage.py runserver 0.0.0.0:8000"
+    command: uwsgi --ini /etc/uwsgi.ini
+    #command: bash -c "python /code/manage.py collectstatic --noinput && python /code/manage.py migrate && python /code/manage.py runserver 0.0.0.0:8000"
     ports:
       - 8000:8000
+    networks:
+      vpcbr:
+        ipv4_address: 10.88.64.5
 
 volumes:
   db:
     driver: local
 
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.88.64.0/24
+          gateway: 10.88.64.1
