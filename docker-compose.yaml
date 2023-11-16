@@ -18,7 +18,6 @@ services:
         ipv4_address: 10.88.64.2
 
   nginx:
-    image: nginx:latest
     container_name: hasker_nginx
     restart: on-failure
     volumes:
@@ -47,8 +46,7 @@ services:
       dockerfile: docker/docker_django.conf
     depends_on:
       - db
-    command: bash -c "python /code/manage.py migrate"
-    command: uwsgi --ini /etc/uwsgi.ini
+    command: bash -c "python /code/manage.py migrate && uwsgi --ini /etc/uwsgi.ini"
     ports:
       - 8000:8000
     networks:
