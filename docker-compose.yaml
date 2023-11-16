@@ -46,7 +46,7 @@ services:
       dockerfile: docker/docker_django.conf
     depends_on:
       - db
-    command: bash -c "python /code/hasker/manage.py migrate && uwsgi --ini /etc/uwsgi.ini"
+    command: bash -c "chmod 777 /code/hasker/media/ && python /code/hasker/manage.py migrate && uwsgi --ini /etc/uwsgi.ini"
     ports:
       - 8000:8000
     networks:
