@@ -21,7 +21,7 @@ services:
     container_name: hasker_nginx
     restart: on-failure
     volumes:
-      - ./code:/code
+      - ./:/code
       - /sock:/sock
     build:
       context: .
@@ -39,14 +39,14 @@ services:
     restart: always
     container_name: hasker
     volumes:
-      - ./hasker:/code
+      - ./:/code
       - /sock:/sock
     build:
       context: .
       dockerfile: docker/docker_django.conf
     depends_on:
       - db
-    command: bash -c "python /code/manage.py migrate && uwsgi --ini /etc/uwsgi.ini"
+    command: bash -c "python /code/hasker/manage.py migrate && uwsgi --ini /etc/uwsgi.ini"
     ports:
       - 8000:8000
     networks:
