@@ -47,8 +47,8 @@ services:
       dockerfile: docker/docker_django.conf
     depends_on:
       - db
+    command: bash -c "python /code/manage.py migrate"
     command: uwsgi --ini /etc/uwsgi.ini
-    #command: bash -c "python /code/manage.py collectstatic --noinput && python /code/manage.py migrate && python /code/manage.py runserver 0.0.0.0:8000"
     ports:
       - 8000:8000
     networks:
